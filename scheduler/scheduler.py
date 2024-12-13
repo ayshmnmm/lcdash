@@ -2,8 +2,9 @@ import time
 import threading
 from notifications.manager import NotificationManager
 
+
 class Scheduler:
-    def __init__(self, lcd, boards, notification_manager = None):
+    def __init__(self, lcd, boards, notification_manager=None):
         """
         Initializes the scheduler with the given LCD, boards, and notification manager.
         """
@@ -21,7 +22,7 @@ class Scheduler:
             if board.data_provider is not None:
                 provider_list.add(board.data_provider)
         return provider_list
-    
+
     def _start_providers(self):
         for provider in self.provider_list:
             provider.start()
@@ -44,7 +45,10 @@ class Scheduler:
         """
         while self.running:
             # if any notifications are available, display them first
-            if self.notification_manager and self.notification_manager.has_notifications():
+            if (
+                self.notification_manager
+                and self.notification_manager.has_notifications()
+            ):
                 self.notification_manager.display_next_notification(self.lcd, {})
 
             # get the current board to display
@@ -52,8 +56,13 @@ class Scheduler:
 
             start_time = time.time()
             last_update_time = start_time
-            sleep_time = 0.1 if board.update_interval > 100 else board.update_interval / 1000
-            context = {'start_time': start_time, 'end_time': start_time + board.duration}
+            sleep_time = (
+                0.1 if board.update_interval > 100 else board.update_interval / 1000
+            )
+            context = {
+                "start_time": start_time,
+                "end_time": start_time + board.duration,
+            }
 
             # display the board
             self.lcd.clear()
@@ -61,24 +70,29 @@ class Scheduler:
 
             # if board has decided to stop displaying, move to the next board
             if not continue_board_display:
-                self.current_board_index = (self.current_board_index + 1) % len(self.boards)
+                self.current_board_index = (self.current_board_index + 1) % len(
+                    self.boards
+                )
                 continue
 
             # loop until the board duration has elapsed or the board decides to stop displaying
             # if any notifications are available, display them first and add the time taken to display the notification
             # to the end time of the current board
-            while continue_board_display and time.time() < context['end_time']:
+            while continue_board_display and time.time() < context["end_time"]:
                 if not self.running:
                     break
 
                 # if any notifications are available, display them first
-                if self.notification_manager and self.notification_manager.has_notifications():
+                if (
+                    self.notification_manager
+                    and self.notification_manager.has_notifications()
+                ):
                     notification_start_time = time.time()
                     self.notification_manager.display_next_notification(self.lcd, {})
                     self.lcd.clear()
 
                     # add the time taken to display the notification to the end time of the current board
-                    context['end_time'] += time.time() - notification_start_time
+                    context["end_time"] += time.time() - notification_start_time
 
                     # if there are more notifications, continue displaying them
                     if self.notification_manager.has_notifications():
@@ -87,7 +101,9 @@ class Scheduler:
                     # get the current board to display after the notification
                     continue_board_display = board.display(self.lcd, context)
                     if not continue_board_display:
-                        self.current_board_index = (self.current_board_index + 1) % len(self.boards)         
+                        self.current_board_index = (self.current_board_index + 1) % len(
+                            self.boards
+                        )
 
                 # update the board display every update_interval
                 if time.time() - last_update_time > board.update_interval / 1000:

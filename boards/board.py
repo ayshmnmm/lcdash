@@ -9,19 +9,25 @@ class Board(ABC):
     Each board is a self-contained entity that can be displayed on the LCD.
     """
 
-    def __init__(self,
-                 position: tuple[int, int] = config.BOARD_DEFAULT_POSITION,
-                 size: tuple[int, int] = config.BOARD_DEFAULT_SIZE,
-                 data_provider = None,
-                 update_interval: int = config.BOARD_DEFAULT_UPDATE_INTERVAL,
-                 duration: int = config.BOARD_DEFAULT_DURATION):
+    def __init__(
+        self,
+        position: tuple[int, int] = config.BOARD_DEFAULT_POSITION,
+        size: tuple[int, int] = config.BOARD_DEFAULT_SIZE,
+        data_provider=None,
+        update_interval: int = config.BOARD_DEFAULT_UPDATE_INTERVAL,
+        duration: int = config.BOARD_DEFAULT_DURATION,
+    ):
         """
         Initializes the board.
         """
-        self.position: tuple[int, int] = position  # position of top-left corner of the board on the LCD
+        self.position: tuple[int, int] = (
+            position  # position of top-left corner of the board on the LCD
+        )
         self.size: tuple[int, int] = size  # board size (rows, columns)
         self.data_provider = data_provider  # data provider for the board
-        self.update_interval: int = update_interval  # to call the display method every display_interval ms
+        self.update_interval: int = (
+            update_interval  # to call the display method every display_interval ms
+        )
         self.duration: int = duration  # duration of the board in seconds
 
     @abstractmethod

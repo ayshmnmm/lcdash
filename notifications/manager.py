@@ -2,6 +2,7 @@ import queue
 import threading
 import time
 
+
 class NotificationItem:
     def __init__(self, notification_board, event: dict, priority: int = 5):
         self.notification_board = notification_board
@@ -13,7 +14,7 @@ class NotificationItem:
 
     def __eq__(self, other):
         return self.priority == other.priority
-    
+
 
 class NotificationManager:
     def __init__(self):
@@ -34,7 +35,9 @@ class NotificationManager:
         """
         with self.lock:
             print(f"Adding notification with priority {priority}")
-            self.notification_queue.put(NotificationItem(notification_board, event, priority))
+            self.notification_queue.put(
+                NotificationItem(notification_board, event, priority)
+            )
 
     def get_notification(self):
         """
@@ -48,7 +51,7 @@ class NotificationManager:
                 item = self.notification_queue.get()
                 return item.notification_board, item.event
             return None
-        
+
     def has_notifications(self):
         """
         Checks if there are any notifications in the queue.
@@ -57,7 +60,7 @@ class NotificationManager:
         """
         with self.lock:
             return not self.notification_queue.empty()
-        
+
     def display_next_notification(self, lcd, context):
         """
         Displays the next notification in the queue on the given LCD.
@@ -70,18 +73,22 @@ class NotificationManager:
 
             start_time = time.time()
             last_update_time = start_time
-            sleep_time = 0.1 if board.update_interval > 100 else board.update_interval / 1000
-            context = {'start_time': start_time, 'end_time': start_time + board.duration}
+            sleep_time = (
+                0.1 if board.update_interval > 100 else board.update_interval / 1000
+            )
+            context = {
+                "start_time": start_time,
+                "end_time": start_time + board.duration,
+            }
             context["event"] = event.copy()
 
             lcd.clear()
             continue_board_display = board.display(lcd, context)
             if not continue_board_display:
                 return
-            
-            while continue_board_display and time.time() < context['end_time']:
+
+            while continue_board_display and time.time() < context["end_time"]:
                 if time.time() - last_update_time > board.update_interval / 1000:
                     last_update_time = time.time()
                     continue_board_display = board.update(lcd, context)
                 time.sleep(sleep_time)
-                

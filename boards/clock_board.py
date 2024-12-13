@@ -1,4 +1,7 @@
 from .board import Board
+from icons.manager import IconManager
+import icons.icons as icons
+
 
 class ClockBoard(Board):
     """
@@ -12,9 +15,8 @@ class ClockBoard(Board):
         :param lcd: the LCD object
         """
         lcd.cursor_pos = self.position
-        lcd.write_string("Clock board")
+        lcd.write_string(f"{IconManager.use_icon(lcd, icons.CLOCK)} UTC Time now")
         return True
-        
 
     def update(self, lcd, context):
         """

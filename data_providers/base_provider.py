@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 import threading
 import time
 
+
 class DataProvider(ABC):
     def __init__(self, update_interval: float = 30):
         """
@@ -13,6 +14,7 @@ class DataProvider(ABC):
         self.lock = threading.Lock()
         self.running: bool = True
         self.update_interval: float = update_interval
+        self.subscribers = []  # list of subscribers to call when data is updated
 
     @abstractmethod
     def fetch_data(self):
@@ -27,12 +29,30 @@ class DataProvider(ABC):
         """
         with self.lock:
             return self._data.copy()
-        
+
+    def subscribe(self, handler):
+        """
+        Subscribes to data updates. The handler should accept a single argument, the data.
+        """
+        self.subscribers.append(handler)
+
+    def _notify_subscribers(self, data):
+        """
+        Notify all subscribers of the new data.
+        """
+        for handler in self.subscribers:
+            handler(data)
+
     def set_data(self, data):
         """
         Sets the data in a thread-safe way.
         """
         with self.lock:
+            if len(self.subscribers) != 0 and data != self._data:
+                # call subscriber handlers in a separate thread
+                threading.Thread(
+                    target=self._notify_subscribers, args=(data.copy(),)
+                ).start()
             self._data = data
 
     def start(self):
