@@ -1,0 +1,13 @@
+# ide
+.idea/
+.vscode/
+
+# venv
+.venv/
+
+# python
+__pycache__/
+*.py[cod]
+
+# notes
+notes.md
