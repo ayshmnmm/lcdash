@@ -43,6 +43,6 @@ class GreetingBoard(Board):
         lcd.write_string(f"{' ' * (3 - self.dot)}")
         self.dot = (self.dot + 1) % 4
         lcd.cursor_pos = (self.position[0] + 3, self.position[1])
-        lcd.write_string(f"{round(context['end_time'] - time.time())}s left")
+        lcd.write_string(f"{round(context['end_time'] - time.time()):02d}s left")
         return True
     
