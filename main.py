@@ -26,7 +26,7 @@ if __name__ == "__main__":
     )
 
     boards = (
-        ClockBoard(duration=2, data_provider=ClockProvider(update_interval=1)),
+        ClockBoard(duration=5, data_provider=ClockProvider(update_interval=1)),
         GreetingBoard(update_interval=75),
     )
 
@@ -48,15 +48,15 @@ if __name__ == "__main__":
     scheduler = Scheduler(lcd, boards, notification_manager)
     scheduler.start()
 
-    time.sleep(3)
+    time.sleep(6)
     print("Adding motion detection notification")
-    motion_notifier.notify({"message": "#noti 1"})
+    # motion_notifier.notify({"message": "#noti 1"})
     time.sleep(5)
     print("Adding another motion detection notification")
-    motion_notifier.notify({"message": "#noti 2"})
+    motion_notifier.notify({"message": "#noti 2"}, duration=10)
     time.sleep(10)
     print("Adding another 3rd motion detection notification")
-    motion_notifier.notify({"message": "#noti 3"})
+    # motion_notifier.notify({"message": "#noti 3"})
 
     print("Press Ctrl+C to stop the scheduler")
     try:

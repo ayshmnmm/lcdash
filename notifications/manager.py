@@ -4,10 +4,11 @@ import time
 
 
 class NotificationItem:
-    def __init__(self, notification_board, event: dict, priority: int = 5):
+    def __init__(self, notification_board, event: dict, priority: int = 5, duration=None):
         self.notification_board = notification_board
         self.event = event
         self.priority = priority
+        self.duration = duration if duration else notification_board.duration
 
     def __lt__(self, other):
         return self.priority < other.priority
@@ -24,7 +25,7 @@ class NotificationManager:
         self.notification_queue = queue.PriorityQueue()
         self.lock = threading.Lock()
 
-    def add_notification(self, notification_board, event: dict, priority: int = 5):
+    def add_notification(self, notification_board, event: dict, priority: int = 5, duration=None):
         """
         Adds a notification to the notification queue with the given priority. Lower priority values will be processed
         first.
@@ -32,11 +33,12 @@ class NotificationManager:
         :param notification_board: The notification board that will be used to display the notification
         :param event: The event data that will be displayed by the notification board
         :param priority: The priority of the notification (default: 5)
+        :param duration: The duration for which the notification will be displayed (default: uses the board's duration)
         """
         with self.lock:
             print(f"Adding notification with priority {priority}")
             self.notification_queue.put(
-                NotificationItem(notification_board, event, priority)
+                NotificationItem(notification_board, event, priority, duration)
             )
 
     def get_notification(self):
@@ -48,8 +50,7 @@ class NotificationManager:
         """
         with self.lock:
             if not self.notification_queue.empty():
-                item = self.notification_queue.get()
-                return item.notification_board, item.event
+                return self.notification_queue.get()
             return None
 
     def has_notifications(self):
@@ -69,7 +70,7 @@ class NotificationManager:
         """
         notification = self.get_notification()
         if notification:
-            board, event = notification
+            board, event = notification.notification_board, notification.event
 
             start_time = time.time()
             last_update_time = start_time
@@ -78,7 +79,7 @@ class NotificationManager:
             )
             context = {
                 "start_time": start_time,
-                "end_time": start_time + board.duration,
+                "end_time": start_time + notification.duration,
             }
             context["event"] = event.copy()
 

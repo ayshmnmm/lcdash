@@ -11,8 +11,8 @@ class Notifier:
         self.notification_board = notification_board
         self.data_provider = data_provider
 
-    def notify(self, event, priority: int = 5):
+    def notify(self, event, priority: int = 5, duration=None):
         """
         Add the notification to the notification manager queue.
         """
-        self.notification_manager.add_notification(self.notification_board, event, priority)
+        self.notification_manager.add_notification(self.notification_board, event, priority, duration)
