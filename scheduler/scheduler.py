@@ -1,7 +1,5 @@
 import time
 import threading
-from notifications.manager import NotificationManager
-
 
 class Scheduler:
     def __init__(self, lcd, boards, notification_manager=None):

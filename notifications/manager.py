@@ -4,7 +4,9 @@ import time
 
 
 class NotificationItem:
-    def __init__(self, notification_board, event: dict, priority: int = 5, duration=None):
+    def __init__(
+        self, notification_board, event: dict, priority: int = 5, duration=None
+    ):
         self.notification_board = notification_board
         self.event = event
         self.priority = priority
@@ -25,7 +27,9 @@ class NotificationManager:
         self.notification_queue = queue.PriorityQueue()
         self.lock = threading.Lock()
 
-    def add_notification(self, notification_board, event: dict, priority: int = 5, duration=None):
+    def add_notification(
+        self, notification_board, event: dict, priority: int = 5, duration=None
+    ):
         """
         Adds a notification to the notification queue with the given priority. Lower priority values will be processed
         first.

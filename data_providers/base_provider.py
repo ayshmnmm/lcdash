@@ -13,6 +13,7 @@ class DataProvider(ABC):
         self._data: dict = {}
         self.lock = threading.Lock()
         self.running: bool = True
+        self.thread: threading.Thread = None
         self.update_interval: float = update_interval
         self.subscribers = []  # list of subscribers to call when data is updated
 
@@ -57,8 +58,10 @@ class DataProvider(ABC):
 
     def start(self):
         """Starts the data-fetching thread."""
-        thread = threading.Thread(target=self._run, daemon=True)
-        thread.start()
+        if self.thread is not None:
+            return
+        self.thread = threading.Thread(target=self._run, daemon=True)
+        self.thread.start()
 
     def _run(self):
         """Continuously fetch data while running."""

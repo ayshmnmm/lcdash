@@ -15,4 +15,6 @@ class Notifier:
         """
         Add the notification to the notification manager queue.
         """
-        self.notification_manager.add_notification(self.notification_board, event, priority, duration)
+        self.notification_manager.add_notification(
+            self.notification_board, event, priority, duration
+        )

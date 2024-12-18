@@ -3,6 +3,7 @@ from boards.board import Board
 from notifications.notifier import Notifier
 from icons.manager import IconManager
 import icons.icons as icons
+from utils.common_utils import get_progress_percent
 
 
 class MotionDetectionNotification(Board):
@@ -12,8 +13,14 @@ class MotionDetectionNotification(Board):
         lcd.write_string(
             f"{IconManager.use_icon(lcd, icons.BELL)} {context['event']['message']}"
         )
+        if "channelID" in context["event"]:
+            lcd.write_string(f":{context['event']['channelID']}")
         self.msg_start_time = time.time()
         self.last_update_time = self.msg_start_time
+        if "board_common_data" in context:
+            context["board_common_data"]["progress"] = get_progress_percent(
+                context["start_time"], time.time(), context["end_time"]
+            )
         return True
 
     def update(self, lcd, context):
@@ -23,6 +30,10 @@ class MotionDetectionNotification(Board):
         lcd.cursor_pos = (2, 0)
         lcd.write_string(f"FPS: {fps:.2f}")
         self.last_update_time = time.time()
+        if "board_common_data" in context:
+            context["board_common_data"]["progress"] = get_progress_percent(
+                context["start_time"], time.time(), context["end_time"]
+            )
         return True
 
 
