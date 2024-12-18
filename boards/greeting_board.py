@@ -1,6 +1,7 @@
 import time
 from .board import Board
 import config
+from utils.common_utils import get_progress_percent
 
 
 class GreetingBoard(Board):
@@ -47,4 +48,8 @@ class GreetingBoard(Board):
         self.dot = (self.dot + 1) % 4
         lcd.cursor_pos = (self.position[0] + 3, self.position[1])
         lcd.write_string(f"{round(context['end_time'] - time.time()):02d}s left")
+        if "board_common_data" in context:
+            context["board_common_data"]["progress"] = get_progress_percent(
+                context["start_time"], time.time(), context["end_time"]
+            )
         return True
