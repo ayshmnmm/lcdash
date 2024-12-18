@@ -1,6 +1,7 @@
 import time
 import threading
 
+
 class Scheduler:
     def __init__(self, lcd, boards, notification_manager=None):
         """

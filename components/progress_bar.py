@@ -47,9 +47,13 @@ class ProgressSpinner(Board):
         :param context: the context dictionary
         """
         # check for progress in context if not then in context["board_common_data"] and if not then 0
-        progress_percentage = int(context.get("progress", context.get("board_common_data", {}).get("progress", 0)))
+        progress_percentage = int(
+            context.get(
+                "progress", context.get("board_common_data", {}).get("progress", 0)
+            )
+        )
         lcd.cursor_pos = self.position
-        total_height = self.size[0]*self.cell_height
+        total_height = self.size[0] * self.cell_height
         # lcd.write_string(f"{progress_percentage}")
         scaled_progress = round((progress_percentage / 100) * (23))
         big_cells, small_cell = divmod(scaled_progress, self.cell_height)

@@ -1,4 +1,6 @@
-def rectangle_icon(height: int, width: int, h_align: str = "center", v_align: str = "center") -> tuple:
+def rectangle_icon(
+    height: int, width: int, h_align: str = "center", v_align: str = "center"
+) -> tuple:
     """
     Generate a rectangular icon with given height, width, horizontal, and vertical alignment.
 
@@ -44,8 +46,7 @@ def rectangle_icon(height: int, width: int, h_align: str = "center", v_align: st
 
     return tuple(icon)
 
-
-# def spinner_border(steps: int) -> tuple:
+    # def spinner_border(steps: int) -> tuple:
     """
     Generate a spinner icon that lights up cells along the border in a clockwise direction.
 
@@ -54,18 +55,20 @@ def rectangle_icon(height: int, width: int, h_align: str = "center", v_align: st
     """
     if steps < 0 or steps > 28:
         raise ValueError("Steps must be between 0 and 28.")
-    
+
     # Initialize an empty 8x8 grid
     grid = [[0 for _ in range(8)] for _ in range(8)]
-    
+
     # Define the border positions in clockwise order
     border_positions = (
-        [(0, i) for i in range(8)] +                 # Top row (left to right)
-        [(i, 7) for i in range(1, 8)] +              # Right column (top to bottom)
-        [(7, i) for i in range(6, -1, -1)] +         # Bottom row (right to left)
-        [(i, 0) for i in range(6, 0, -1)]            # Left column (bottom to top)
+        [(0, i) for i in range(8)]
+        + [(i, 7) for i in range(1, 8)]  # Top row (left to right)
+        + [(7, i) for i in range(6, -1, -1)]  # Right column (top to bottom)
+        + [  # Bottom row (right to left)
+            (i, 0) for i in range(6, 0, -1)
+        ]  # Left column (bottom to top)
     )
-    
+
     # Light up the border based on the steps
     for i in range(steps):
         x, y = border_positions[i]
@@ -86,18 +89,20 @@ def spinner_border(steps: int) -> tuple:
         raise ValueError("Steps must be a non-negative integer.")
     if steps > 22:
         steps = 22
-    
+
     # Initialize an empty 8x5 grid
     grid = [[0 for _ in range(5)] for _ in range(8)]
-    
+
     # Define the border positions in clockwise order
     border_positions = (
-        [(0, i) for i in range(5)] +                 # Top row (left to right)
-        [(i, 4) for i in range(1, 8)] +              # Right column (top to bottom)
-        [(7, i) for i in range(3, -1, -1)] +         # Bottom row (right to left)
-        [(i, 0) for i in range(6, 0, -1)]            # Left column (bottom to top)
+        [(0, i) for i in range(5)]
+        + [(i, 4) for i in range(1, 8)]  # Top row (left to right)
+        + [(7, i) for i in range(3, -1, -1)]  # Right column (top to bottom)
+        + [  # Bottom row (right to left)
+            (i, 0) for i in range(6, 0, -1)
+        ]  # Left column (bottom to top)
     )
-    
+
     # Light up the border based on the steps
     for i in range(steps):
         x, y = border_positions[i]
@@ -105,4 +110,3 @@ def spinner_border(steps: int) -> tuple:
 
     # Convert the grid to a tuple of bitmaps
     return tuple(int("".join(map(str, row)), 2) for row in grid)
-

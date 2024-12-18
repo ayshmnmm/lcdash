@@ -2,6 +2,7 @@ class Queue:
     """
     A simple queue implementation using a list.
     """
+
     def __init__(self, maxsize):
         self.maxsize = maxsize
         self.queue = []
@@ -21,16 +22,18 @@ class Queue:
 
     def full(self):
         return len(self.queue) == self.maxsize
-    
+
     def remove(self, item):
         if item in self.queue:
             self.queue.remove(item)
+
 
 class IconManager:
     """
     A class to manage custom icons on the LCD. It keeps track of the icons that are currently available on the LCD and
     the slots they occupy. It also provides a method to use an icon on the LCD.
     """
+
     max_icons = 8
     icon_queue = Queue(maxsize=max_icons)
     icon_slots = {}  # {icon: slot}
@@ -64,7 +67,7 @@ class IconManager:
             IconManager.icon_queue.put(icon_bitmap)
             IconManager.icon_slots[icon_bitmap] = available_slot
             return available_slot
-        
+
     @staticmethod
     def clear_icon(icon_bitmap):
         """

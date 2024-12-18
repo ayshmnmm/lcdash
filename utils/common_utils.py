@@ -16,6 +16,7 @@ def write_icon(lcd, icon, position):
             lcd.cursor_pos = (position[0] + i, position[1] + j)
             lcd.write_string(IconManager.use_icon(lcd, cell))
 
+
 def get_progress_percent(start_time, current_time, end_time=None, duration=None):
     """Get the progress percentage between the start and end times. Either the end time or the duration must be provided.
 

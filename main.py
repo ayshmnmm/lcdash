@@ -37,7 +37,11 @@ if __name__ == "__main__":
         ClockBoard(data_provider=clock_provider, size=(4, 19)),
         ProgressSpinner(size=(4, 1), position=(0, 19)),
     )
-    greeting_board = (GreetingBoard(update_interval=75), TestBoard(position=(3, 0)), ProgressSpinner(size=(4, 1), position=(0, 19)))
+    greeting_board = (
+        GreetingBoard(update_interval=75),
+        TestBoard(position=(3, 0)),
+        ProgressSpinner(size=(4, 1), position=(0, 19)),
+    )
 
     boards = (
         NestedBoard(boards=time_board, duration=10),
@@ -52,7 +56,13 @@ if __name__ == "__main__":
         username=getenv("ISAPI_USERNAME"),
         password=getenv("ISAPI_PASSWORD"),
     )
-    motion_board = NestedBoard(boards=(MotionDetectionNotification(update_interval=200), ProgressSpinner(size=(4, 1), position=(0, 19))), duration=3)
+    motion_board = NestedBoard(
+        boards=(
+            MotionDetectionNotification(update_interval=200),
+            ProgressSpinner(size=(4, 1), position=(0, 19)),
+        ),
+        duration=3,
+    )
     motion_notifier = MotionDetectionNotifier(
         notification_manager,
         # MotionDetectionNotification(duration=3, update_interval=200),
