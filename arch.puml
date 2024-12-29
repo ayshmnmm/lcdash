@@ -1,0 +1,140 @@
+@startuml
+package "boards" {
+    class Board {
+        +position: tuple[int, int]
+        +size: tuple[int, int]
+        +data_provider: DataProvider
+        +update_interval: int
+        +duration: int
+        +display(lcd: CharLCD, context: dict): bool
+        +update(lcd: CharLCD, context: dict): bool
+    }
+
+    class ClockBoard {
+        +display(lcd: CharLCD, context: dict): bool
+        +update(lcd: CharLCD, context: dict): bool
+    }
+
+    class GreetingBoard {
+        +display(lcd: CharLCD, context: dict): bool
+        +update(lcd: CharLCD, context: dict): bool
+    }
+
+    class NestedBoard {
+        +boards: Iterable[Board]
+        +display(lcd: CharLCD, context: dict): bool
+        +update(lcd: CharLCD, context: dict): bool
+    }
+
+'    class WeatherBoard {
+'        +display(lcd: CharLCD, context: dict): bool
+'        +update(lcd: CharLCD, context: dict): bool
+'    }
+
+    Board <|-- ClockBoard
+    Board <|- GreetingBoard
+    Board <|-- NestedBoard
+'    Board <|-- WeatherBoard
+}
+
+package "data_providers" {
+    class DataProvider {
+        +fetch_data()
+        +get_data(): dict
+        +subscribe(handler)
+        +start()
+        +stop()
+    }
+
+    class ClockProvider {
+        +fetch_data()
+    }
+
+    class WeatherProvider {
+        +fetch_data()
+    }
+
+    class MotionEventsProvider {
+        +fetch_data()
+        +parse_event(event_xml: str): dict
+    }
+
+    DataProvider <|-- ClockProvider
+    DataProvider <|-- WeatherProvider
+    DataProvider <|-- MotionEventsProvider
+}
+
+package "icons" {
+    class IconManager {
+        +use_icon(lcd: CharLCD, icon_bitmap: tuple): str
+        +clear_icon(icon_bitmap: tuple): bool
+    }
+
+    class dynamic_icons {
+        +rectangle_icon(height: int, width: int, h_align: str, v_align: str): tuple
+        +spinner_border(steps: int): tuple
+    }
+}
+
+package "notifications" {
+    class NotificationManager {
+        +add_notification(notification_board: Board, event: dict, priority: int, duration: int)
+        +get_notification(): NotificationItem
+        +has_notifications(): bool
+        +display_next_notification(lcd: CharLCD, context: dict)
+    }
+
+    class NotificationItem {
+        +notification_board: Board
+        +event: dict
+        +priority: int
+        +duration: int
+    }
+
+    class Notifier {
+        +notify(event: dict, priority: int, duration: int)
+    }
+
+    class MotionDetectionNotification {
+        +display(lcd: CharLCD, context: dict): bool
+        +update(lcd: CharLCD, context: dict): bool
+    }
+
+    class MotionDetectionNotifier {
+        +handle_event(event: dict)
+    }
+
+    Notifier <|-- MotionDetectionNotifier
+    Board <|-- MotionDetectionNotification
+}
+
+package "scheduler" {
+    class Scheduler {
+        +start()
+        +stop()
+        +rotate_boards()
+    }
+}
+
+package "utils" {
+    class common_utils {
+        +write_icon(lcd: CharLCD, icon: list, position: tuple)
+        +get_progress_percent(start_time: float, current_time: float, end_time: float, duration: float): float
+    }
+}
+
+Scheduler --> Board
+Scheduler --> NotificationManager
+Board --> DataProvider
+NotificationManager --> NotificationItem
+NotificationManager --> Board
+NotificationItem --> Board
+Notifier --> NotificationManager
+'Notifier --> Board
+MotionDetectionNotifier --> MotionEventsProvider
+MotionDetectionNotifier --> NotificationManager
+MotionDetectionNotifier --> MotionDetectionNotification
+MotionDetectionNotification --> IconManager
+IconManager --> dynamic_icons
+common_utils --> IconManager
+@enduml
