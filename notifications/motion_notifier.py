@@ -43,7 +43,6 @@ class MotionDetectionNotifier(Notifier):
         data_provider.subscribe(self.handle_event)
 
     def handle_event(self, event):
-        print(f"Received event")
         event["message"] = f"Motion detected"
         if event["eventType"] != "videoloss":
             self.notify(event, priority=1, duration=30)

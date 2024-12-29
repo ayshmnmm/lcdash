@@ -1,6 +1,8 @@
 from typing import Iterable
 from boards.board import Board
 import config
+from utils.common_utils import get_progress_percent
+import time
 
 
 class NestedBoard(Board):
@@ -36,6 +38,9 @@ class NestedBoard(Board):
         """
         for board in self.boards:
             context["board_common_data"] = self.board_common_data
+            context["board_common_data"]["progress"] = get_progress_percent(
+                context["start_time"], time.time(), context["end_time"]
+            )
             board.display(lcd, context)
         return True
 
@@ -48,5 +53,8 @@ class NestedBoard(Board):
         """
         for board in self.boards:
             context["board_common_data"] = self.board_common_data
+            context["board_common_data"]["progress"] = get_progress_percent(
+                context["start_time"], time.time(), context["end_time"]
+            )
             board.update(lcd, context)
         return True

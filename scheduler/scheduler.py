@@ -130,5 +130,5 @@ class Scheduler:
         if self.thread:
             self.thread.join()
         self._stop_providers()
-        self.lcd.clear()
         self.lcd.backlight_enabled = False
+        self.lcd.close(clear=True)

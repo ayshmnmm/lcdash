@@ -29,10 +29,5 @@ class ClockBoard(Board):
         lcd.cursor_pos = (self.position[0] + 2, self.position[1])
         data = self.data_provider.get_data()
         lcd.write_string(data["time"])
-        write_icon(lcd, icons.DOOR_2X2, (self.position[0] + 1, self.position[1] + 17))
-        if "board_common_data" in context:
-            context["board_common_data"]["progress"] = get_progress_percent(
-                context["start_time"], time.time(), context["end_time"]
-            )
-
+        # write_icon(lcd, icons.DOOR_2X2, (self.position[0] + 1, self.position[1] + 17))
         return True

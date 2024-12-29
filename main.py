@@ -4,14 +4,15 @@ from os import getenv
 from dotenv import load_dotenv
 
 from boards.nested_board import NestedBoard
-from boards.test_board import TestBoard
 from boards.clock_board import ClockBoard
 from boards.greeting_board import GreetingBoard
+from boards.weather_board import WeatherBoard
 
 from components.progress_bar import ProgressSpinner
 
 from data_providers.clock_provider import ClockProvider
 from data_providers.motion_events_provider import MotionEventsProvider
+from data_providers.weather_provider import WeatherProvider
 
 from notifications.manager import NotificationManager
 from notifications.motion_notifier import (
@@ -32,6 +33,8 @@ if __name__ == "__main__":
     # setup and start data providers
     clock_provider = ClockProvider(update_interval=1)
     clock_provider.start()
+    weather_provider = WeatherProvider(api_key=getenv("WEATHERUNION_API_KEY"), locality_id=getenv("WEATHERUNION_LOCALITY_ID"))
+    weather_provider.start()
 
     time_board = (
         ClockBoard(data_provider=clock_provider, size=(4, 19)),
@@ -39,11 +42,15 @@ if __name__ == "__main__":
     )
     greeting_board = (
         GreetingBoard(update_interval=75),
-        TestBoard(position=(3, 0)),
+        ProgressSpinner(size=(4, 1), position=(0, 19)),
+    )
+    weather_board = (
+        WeatherBoard(data_provider=weather_provider, size=(4, 19)),
         ProgressSpinner(size=(4, 1), position=(0, 19)),
     )
 
     boards = (
+        NestedBoard(boards=weather_board, duration=10),
         NestedBoard(boards=time_board, duration=10),
         NestedBoard(boards=greeting_board, duration=4),
     )
